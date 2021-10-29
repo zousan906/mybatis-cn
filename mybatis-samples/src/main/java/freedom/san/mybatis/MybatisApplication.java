@@ -11,13 +11,15 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.log4j.PropertyConfigurator;
 
 public abstract class MybatisApplication {
-	private SqlSessionFactory sessionFactory;
+	private static SqlSessionFactory sessionFactory;
 
-	static {
 
-	}
 
 	public MybatisApplication() {
+		configLog();
+	}
+
+	private void configLog(){
 		Properties log4jProps = null;
 		try {
 			log4jProps = Resources.getResourceAsProperties("log4j.properties");
@@ -29,19 +31,17 @@ public abstract class MybatisApplication {
 	}
 
 
-
-
-	public void buildSqlSessionFactory(String mybatisConfig) {
+	public static void buildSqlSessionFactory(String mybatisConfig) {
 		try {
 			Reader confReader = Resources.getResourceAsReader(mybatisConfig);
-			this.sessionFactory = new SqlSessionFactoryBuilder().build(confReader);
+			sessionFactory = new SqlSessionFactoryBuilder().build(confReader);
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public SqlSessionFactory getSessionFactory() {
+	public static SqlSessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 }

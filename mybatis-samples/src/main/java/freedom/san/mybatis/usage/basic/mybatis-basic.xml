@@ -25,26 +25,26 @@
 	<properties resource="jdbc.properties"/>
 
 
-<!--	<settings>-->
-<!--			<setting name="cacheEnabled" value="true"/>-->
-<!--			<setting name="lazyLoadingEnabled" value="true"/>-->
-<!--			<setting name="multipleResultSetsEnabled" value="true"/>-->
-<!--			<setting name="useColumnLabel" value="true"/>-->
-<!--			<setting name="useGeneratedKeys" value="false"/>-->
-<!--			<setting name="autoMappingBehavior" value="PARTIAL"/>-->
-<!--			<setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>-->
-<!--			<setting name="defaultExecutorType" value="SIMPLE"/>-->
-<!--			<setting name="defaultStatementTimeout" value="25"/>-->
-<!--			<setting name="defaultFetchSize" value="100"/>-->
-<!--			<setting name="safeRowBoundsEnabled" value="false"/>-->
-<!--			<setting name="mapUnderscoreToCamelCase" value="false"/>-->
-<!--			<setting name="localCacheScope" value="SESSION"/>-->
-<!--			<setting name="jdbcTypeForNull" value="OTHER"/>-->
-<!--			<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>-->
-<!--	</settings>-->
+	<!--	<settings>-->
+	<!--			<setting name="cacheEnabled" value="true"/>-->
+	<!--			<setting name="lazyLoadingEnabled" value="true"/>-->
+	<!--			<setting name="multipleResultSetsEnabled" value="true"/>-->
+	<!--			<setting name="useColumnLabel" value="true"/>-->
+	<!--			<setting name="useGeneratedKeys" value="false"/>-->
+	<!--			<setting name="autoMappingBehavior" value="PARTIAL"/>-->
+	<!--			<setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>-->
+	<!--			<setting name="defaultExecutorType" value="SIMPLE"/>-->
+	<!--			<setting name="defaultStatementTimeout" value="25"/>-->
+	<!--			<setting name="defaultFetchSize" value="100"/>-->
+	<!--			<setting name="safeRowBoundsEnabled" value="false"/>-->
+	<!--			<setting name="mapUnderscoreToCamelCase" value="false"/>-->
+	<!--			<setting name="localCacheScope" value="SESSION"/>-->
+	<!--			<setting name="jdbcTypeForNull" value="OTHER"/>-->
+	<!--			<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>-->
+	<!--	</settings>-->
 
-	<environments default="development">
-		<environment id="dev-pool">
+	<environments default="dev-pool">
+		<environment id="dev-unpool">
 			<transactionManager type="JDBC">
 				<property name="" value=""/>
 			</transactionManager>
@@ -69,4 +69,14 @@
 		</environment>
 	</environments>
 
+	<mappers>
+		<!--resource 指定mapper xml 地址-->
+<!--		<mapper resource="freedom/san/mybatis/usage/basic/xml/ClassesMapper.xml"/>-->
+		<!--引用的xml文件必须对应接口名称路径名一致-->
+		<!--		<mapper class=""/>-->
+		<!--引用网络资源或者本地资源的全路径-->
+		<!--		<mapper url=""/>-->
+		<!--		引入一个包下面的全部xml文件,且XML文件名和接口名称必须相同,路径也需要相同-->
+		<package name="freedom.san.mybatis.usage.basic.mapper"/>
+	</mappers>
 </configuration>

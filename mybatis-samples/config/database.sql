@@ -1,0 +1,5 @@
+CREATE TABLE classes
+(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '班级id',
+    `name` VARCHAR(50) NOT NULL COMMENT '班级名称'
+)

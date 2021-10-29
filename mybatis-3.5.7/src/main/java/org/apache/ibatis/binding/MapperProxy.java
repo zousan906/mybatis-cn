@@ -50,7 +50,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     this.mapperInterface = mapperInterface;
     this.methodCache = methodCache;
   }
-
+  // 静态块: 类加载时 执行
+  // 主要作用:
   static {
     Method privateLookupIn;
     try {
@@ -93,6 +94,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
       return MapUtil.computeIfAbsent(methodCache, method, m -> {
+        //如果此方法是默认方法，则返回true ； 否则返回false 。 默认方法是公共非抽象实例方法，即具有主体的非静态方法，在接口类型中声明
         if (m.isDefault()) {
           try {
             if (privateLookupInMethod == null) {

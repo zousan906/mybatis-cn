@@ -361,8 +361,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  //解析 xml mapper 节点配置
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
+      // 解析配置的[package,name] 属性
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");

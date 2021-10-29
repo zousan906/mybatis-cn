@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="freedom.san.mybatis.mapper.StudentMapper">
+
+	<resultMap id="BaseResultMap" type="freedom.san.mybatis.domain.Student">
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="age" column="age" jdbcType="INTEGER"/>
+		<result property="sex" column="sex" jdbcType="INTEGER"/>
+		<result property="cid" column="cid" jdbcType="INTEGER"/>
+		<result property="cardid" column="cardId" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="columns">
+		id,name,age
+	</sql>
+	<!--useCache 表示使用缓存 -->
+	<select id="selectIf" parameterType="string" flushCache="false"
+			useCache="true" resultMap="BaseResultMap">
+		select
+		<include refid="columns"/>
+		from student
+		<!--模拟if标签 -->
+		<if test="id !=null and id!=''">
+			where id=#{id}
+		</if>
+	</select>
+
+
+	<select id="selectWhereIf" parameterType="string" flushCache="false"
+			useCache="true" resultMap="BaseResultMap">
+		select
+		<include refid="columns"/>
+		from student
+		<where>
+			<if test="id !=null and id!=''">
+				and id=#{id}
+			</if>
+			<if test="name !=null and name!=''">and name=#{name}</if>
+		</where>
+
+
+	</select>
+
+
+	<select id="find" parameterType="map" resultType="freedom.san.mybatis.domain.Student">
+
+		select * from student
+		<!--     if else if  else -->
+		<where>
+			<choose>
+				<when test="sex != null">
+					and sex=#{sex}
+				</when>
+				<when test="name != null and name != ''">
+					and name like concat('%',#{name},'%')
+				</when>
+				<!-- <otherwise>
+				   ...
+				</otherwise> -->
+			</choose>
+		</where>
+	</select>
+
+
+	<select id="selectTrim">
+		select * from user
+
+		　　
+		<trim prefix="WHERE" prefixoverride="AND |OR">
+
+			　　　　
+			<if test="name != null and name.length()>0">AND name=#{name}</if>
+
+			　　　　
+			<if test="gender != null and gender.length()>0">AND gender=#{gender}</if>
+
+			　　
+		</trim>
+	</select>
+</mapper>

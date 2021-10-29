@@ -34,6 +34,7 @@ import org.apache.ibatis.session.SqlSession;
 public class MapperRegistry {
 
   private final Configuration config;
+
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
   public MapperRegistry(Configuration config) {
@@ -48,7 +49,8 @@ public class MapperRegistry {
     }
     try {
       return mapperProxyFactory.newInstance(sqlSession);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }
   }
@@ -57,13 +59,20 @@ public class MapperRegistry {
     return knownMappers.containsKey(type);
   }
 
+  /**
+   * 对mapper 进行代理,并且放入容器中 通过 class 全路径名称做为key.
+   * @param type
+   * @param <T>
+   */
   public <T> void addMapper(Class<T> type) {
+    // 只处理 接口
     if (type.isInterface()) {
       if (hasMapper(type)) {
         throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
       }
       boolean loadCompleted = false;
       try {
+        // 使用jdk 动态代理 对 我们的mapper 接口进行代理
         knownMappers.put(type, new MapperProxyFactory<>(type));
         // It's important that the type is added before the parser is run
         // otherwise the binding may automatically be attempted by the
@@ -71,7 +80,8 @@ public class MapperRegistry {
         MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
         parser.parse();
         loadCompleted = true;
-      } finally {
+      }
+      finally {
         if (!loadCompleted) {
           knownMappers.remove(type);
         }
@@ -99,17 +109,21 @@ public class MapperRegistry {
    * @since 3.2.2
    */
   public void addMappers(String packageName, Class<?> superType) {
+    // 反射查找对应的mapper class
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
+    // IsA 是 ResolverUtil 中的条件匹配类,主要是用来判断是否是指定类的 子类 A.isAssignableFrom(Type)
+    // find 遍历给定包名下的类 然后通过IsA test
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> mapperSet = resolverUtil.getClasses();
+    // 遍历扫描出的mapper class 进行代理 放入容器中
     for (Class<?> mapperClass : mapperSet) {
       addMapper(mapperClass);
     }
   }
 
   /**
-   * Adds the mappers.
-   *
+   * Adds the mappers.<p/>
+   * 根据指定的 package 包名解析 mapper 映射文件
    * @param packageName
    *          the package name
    * @since 3.2.2
