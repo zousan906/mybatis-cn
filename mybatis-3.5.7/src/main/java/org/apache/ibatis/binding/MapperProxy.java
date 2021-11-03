@@ -107,6 +107,9 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             throw new RuntimeException(e);
           }
         } else {
+          // mapperInterface   mybatis mapper 接口类,
+          // method 被代理的方法
+          // Configuration 配置参数
           return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
         }
       });

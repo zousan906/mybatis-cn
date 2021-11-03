@@ -1,0 +1,26 @@
+@startuml
+(*) --> "获取mapper中定义的所有parameterMap元素"
+if "是否有未处理的parameterMap元素"  as parameterMapIf then
+partition 解析parameterMap元素 #DeepSkyBlue{
+    --> [有] 依次加载parameterMap元素的id和type属性
+        --> 获取当前parameterMap元素的所有parameter子节点
+        if "是否有未处理的parameter子元素" as parameterIf then
+        partition 解析parameter子元素 #Azure{
+            --> [有]  "依次加载parameter元素的\nproperty,javaType,\njdbcType,resultMap,\nmode,typeHandler,numericScale属性"
+            --> "创建ParameterMapping对象，并保存起来"
+            --> parameterIf
+        }
+        else
+        --> [无] "根据id和type属性以及\n解析出的ParameterMapping对象集合，\n创建ParameterMap对象"
+        --> 将ParameterMap对象注册到参数映射对象注册表中
+        --> parameterMapIf
+}
+    -->(*)
+
+    endif
+else
+ -->[无](*)
+endif
+
+header parameterMap元素的解析过程
+@enduml

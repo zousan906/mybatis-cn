@@ -61,8 +61,11 @@ public class MapperRegistry {
 
   /**
    * 对mapper 进行代理,并且放入容器中 通过 class 全路径名称做为key.
-   * @param type
-   * @param <T>
+   *  流程:
+   *  <ul>
+   *    <li>对映射器接口 生产代理类 </li>
+   *    <li>对映射器接口进行注解解析流程 {@link MapperAnnotationBuilder#parse()} </li>
+   *  <ul/>
    */
   public <T> void addMapper(Class<T> type) {
     // 只处理 接口
@@ -107,6 +110,15 @@ public class MapperRegistry {
    * @param superType
    *          the super type
    * @since 3.2.2
+   * <br/>
+   * 解析流程:
+   * <ul>
+   * <li>过滤出指定包名下的 所有指定父类型的子类
+   * <li>根据扫描出来得class,处理是接口类型的 类
+   * <li>判断当前class 是否已经被处理(已经被处理了的放入 knownMappers<K,V>({@link this#knownMappers}) key 是class,V 是对 接口生成的代理类,通过JDK 动态代理生成的)
+   * <li>为还未处理的class 生成代理类: {@link MapperProxyFactory},并且放入 {@code knownMappers}
+   * <li>通过 {@link MapperAnnotationBuilder#parse()} 解析注解
+   * </ul>
    */
   public void addMappers(String packageName, Class<?> superType) {
     // 反射查找对应的mapper class

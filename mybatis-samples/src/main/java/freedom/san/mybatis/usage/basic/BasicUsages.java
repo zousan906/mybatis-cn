@@ -14,15 +14,17 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-@FixMethodOrder(value=MethodSorters.JVM)
+
+@FixMethodOrder(value = MethodSorters.JVM)
 public class BasicUsages extends MybatisApplication {
 	static final Logger log = LoggerFactory.getLogger(BasicUsages.class);
 
 	ClassesMapper mapper;
+
 	SqlSession sqlSession;
 
 	@BeforeClass
-	public static void init(){
+	public static void init() {
 		buildSqlSessionFactory("freedom/san/mybatis/usage/basic/mybatis-basic.xml");
 	}
 
@@ -39,7 +41,7 @@ public class BasicUsages extends MybatisApplication {
 		classes.setName("class one");
 		mapper.insert(classes);
 		sqlSession.commit();
-		log.info("insert class{}",classes);
+		log.info("insert class{}", classes);
 	}
 
 	@After
@@ -55,4 +57,5 @@ public class BasicUsages extends MybatisApplication {
 			log.info(aClass.toString());
 		}
 	}
+
 }

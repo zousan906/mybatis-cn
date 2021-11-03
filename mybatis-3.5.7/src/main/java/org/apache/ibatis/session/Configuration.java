@@ -94,50 +94,99 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Clinton Begin
+ *
+ *
+ * mybatis-config.xml 配置结构:
+ * <p>
+ * configuration
+ *    properties（属性）
+ *    settings（设置）
+ *    typeAliases（类型别名）
+ *    typeHandlers（类型处理器）
+ *    objectFactory（对象工厂）
+ *    plugins（插件）
+ *    environments（环境配置）
+ *       environment（环境变量）
+ *       transactionManager（事务管理器）
+ *       dataSource（数据源）
+ *    databaseIdProvider（数据库厂商标识）
+ *    mappers（映射器)
+ * </p>
+ *
  */
 public class Configuration {
 
   protected Environment environment;
 
   protected boolean safeRowBoundsEnabled;
+
   protected boolean safeResultHandlerEnabled = true;
+
   protected boolean mapUnderscoreToCamelCase;
+
   protected boolean aggressiveLazyLoading;
+
   protected boolean multipleResultSetsEnabled = true;
+
   protected boolean useGeneratedKeys;
+
   protected boolean useColumnLabel = true;
+
   protected boolean cacheEnabled = true;
+
   protected boolean callSettersOnNulls;
+
   protected boolean useActualParamName = true;
+
   protected boolean returnInstanceForEmptyRow;
+
   protected boolean shrinkWhitespacesInSql;
 
   protected String logPrefix;
+
   protected Class<? extends Log> logImpl;
+
   protected Class<? extends VFS> vfsImpl;
+
   protected Class<?> defaultSqlProviderType;
+
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+
   protected Integer defaultStatementTimeout;
+
   protected Integer defaultFetchSize;
+
   protected ResultSetType defaultResultSetType;
+
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
+
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
+
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
+
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
+
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
   protected boolean lazyLoadingEnabled = false;
+
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
+
   /**
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
@@ -147,25 +196,58 @@ public class Configuration {
   protected Class<?> configurationFactory;
 
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
+
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
-      .conflictMessageProducer((savedValue, targetValue) ->
-          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
-  protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
-  protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
-  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
 
-  protected final Set<String> loadedResources = new HashSet<>();
+  /**
+   * StrictMap :
+   * put:
+   * 1、 截取最后一个"."符号后面的字符串做为 shortKey 存储一次value
+   * 2、 shortKey 重复时，存储的value是一个 Ambiguity 对象。get 获取时会判断value是否是 Ambiguity 类型，如果是则抛出异常
+   * 3、 直接调用 super.put(key, value) 存储同一 value 一次（此时key未做任何操作处理）
+   *
+   * 结果就是 一次put 两个元素:
+   *            com.xxx.selectId = select * from user where id=?
+   *            selectId         = select * from user where id=?
+   */
+
+  // mappedStatements XML mapper 中的节点信息,大部分情况下 为sql 语句,就是sql 语句解析为 一个statement
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
+    .conflictMessageProducer((savedValue, targetValue) ->
+      ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+
+
+  // 保存 每个 xml mapper 中定义的 结果映射
+  protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
+
+  // 保存 每个xml mapper 中 statement 中的 参数映射
+  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
+
+  // xml mapper 中 sql 的节点
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
 
+
+  protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
+
+  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
+
+  // 记录被加载过的资源名称主要包括:
+  //  1.xml mapper 文档名称
+  protected final Set<String> loadedResources = new HashSet<>();
+
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
+
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
+
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
+
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
 
   /*
@@ -174,6 +256,10 @@ public class Configuration {
    * namespace which the actual cache is bound to.
    */
   protected final Map<String, String> cacheRefMap = new HashMap<>();
+
+  // debug 添加内容
+  private static final Logger log = LoggerFactory.getLogger(Configuration.class);
+
 
   public Configuration(Environment environment) {
     this();
@@ -339,10 +425,17 @@ public class Configuration {
 
   public void addLoadedResource(String resource) {
     loadedResources.add(resource);
+    if (log.isDebugEnabled()) {
+      log.debug("add Loaded Resource:{}", resource);
+    }
   }
 
   public boolean isResourceLoaded(String resource) {
-    return loadedResources.contains(resource);
+    boolean isLoaded = loadedResources.contains(resource);
+    if (log.isDebugEnabled()) {
+      log.debug("isResourceLoaded  Resource :{} loaded:{}", resource, isLoaded);
+    }
+    return isLoaded;
   }
 
   public Environment getEnvironment() {
@@ -648,7 +741,7 @@ public class Configuration {
   }
 
   public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler,
-      ResultHandler resultHandler, BoundSql boundSql) {
+    ResultHandler resultHandler, BoundSql boundSql) {
     ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
     resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
     return resultSetHandler;
@@ -670,9 +763,11 @@ public class Configuration {
     Executor executor;
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
-    } else if (ExecutorType.REUSE == executorType) {
+    }
+    else if (ExecutorType.REUSE == executorType) {
       executor = new ReuseExecutor(this, transaction);
-    } else {
+    }
+    else {
       executor = new SimpleExecutor(this, transaction);
     }
     if (cacheEnabled) {
@@ -868,6 +963,7 @@ public class Configuration {
    * Parses all the unprocessed statement nodes in the cache. It is recommended
    * to call this method once all the mappers are added as it provides fail-fast
    * statement validation.
+   * 解析缓存中所有的未处理的 sql 语句,建议在添加mapper 后立即调用次方法,此方法提供了快速失败机制
    */
   protected void buildAllStatements() {
     parsePendingResultMaps();
@@ -909,7 +1005,8 @@ public class Configuration {
             iterator.next().resolve();
             iterator.remove();
             resolved = true;
-          } catch (IncompleteElementException e) {
+          }
+          catch (IncompleteElementException e) {
             ex = e;
           }
         }
@@ -970,7 +1067,9 @@ public class Configuration {
   protected static class StrictMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -4950446264854982944L;
+
     private final String name;
+
     private BiFunction<V, V, String> conflictMessageProducer;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
@@ -1011,13 +1110,14 @@ public class Configuration {
     public V put(String key, V value) {
       if (containsKey(key)) {
         throw new IllegalArgumentException(name + " already contains value for " + key
-            + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
+          + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
-        } else {
+        }
+        else {
           super.put(shortKey, (V) new Ambiguity(shortKey));
         }
       }
@@ -1032,7 +1132,7 @@ public class Configuration {
       }
       if (value instanceof Ambiguity) {
         throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
-            + " (try using the full name including the namespace, or rename one of the entries)");
+          + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
     }

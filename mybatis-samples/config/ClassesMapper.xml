@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="freedom.san.mybatis.usage.basic.mapper.ClassesMapper">
+
+<!--	<cache/>-->
+<!--	<cache-ref namespace=""/>-->
+
+	<!--	配置参数映射-->
+	<parameterMap id="classIdName" type="freedom.san.mybatis.usage.basic.domain.Classes">
+		<parameter property="id" javaType="int"/>
+		<parameter property="name" javaType="String"/>
+	</parameterMap>
+
+
+	<resultMap id="BaseResultMap" type="freedom.san.mybatis.usage.basic.domain.Classes">
+		<!--		<constructor>-->
+		<!--			<idArg name="id" column="id" javaType="int"/>-->
+		<!--			<arg name="name" column="name" javaType="string"/>-->
+		<!--		</constructor>-->
+		<id property="id" column="id"  jdbcType="INTEGER"/>
+		<result property="name" column="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="IdNameRMap" type="freedom.san.mybatis.usage.basic.domain.Classes">
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="selectAll" resultType="freedom.san.mybatis.usage.basic.domain.Classes">
+		select *
+		from classes
+	</select>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+			parameterType="freedom.san.mybatis.usage.basic.domain.Classes">
+		insert INTO classes(name)
+		VALUES (#{name});
+	</insert>
+	<update id="update" parameterType="freedom.san.mybatis.usage.basic.domain.Classes">
+		UPDATE classes
+		set name=#{name}
+		where id = #{id};
+	</update>
+	<delete id="delete" parameterType="int">
+		delete
+		from classes
+		where id = #{id};
+	</delete>
+</mapper>

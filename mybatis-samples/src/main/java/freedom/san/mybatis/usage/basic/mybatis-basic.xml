@@ -71,8 +71,8 @@
 
 	<mappers>
 		<!--resource 指定mapper xml 地址-->
-<!--		<mapper resource="freedom/san/mybatis/usage/basic/xml/ClassesMapper.xml"/>-->
-		<!--引用的xml文件必须对应接口名称路径名一致-->
+		<!--		<mapper resource="freedom/san/mybatis/usage/basic/xml/ClassesMapper.xml"/>-->
+		<!--引用的xml文件必须对应接口名称名一致,相同路径-->
 		<!--		<mapper class=""/>-->
 		<!--引用网络资源或者本地资源的全路径-->
 		<!--		<mapper url=""/>-->

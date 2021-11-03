@@ -122,4 +122,16 @@ public class Student implements Serializable {
     public void setCardid(Integer cardid) {
         this.cardid = cardid;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", sex=" + sex +
+                ", cid=" + cid +
+                ", cardid=" + cardid +
+                '}';
+    }
 }
