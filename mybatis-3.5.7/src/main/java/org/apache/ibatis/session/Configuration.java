@@ -233,7 +233,8 @@ public class Configuration {
   // xml mapper 中 sql 的节点
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
 
-
+  // 保存所有映射器中的声明的缓存, 键值 主要是 映射器的 namespace. 使用 strictMap 则
+  // 长key 为 mapper namespace (一般情况下的包名全路径), 短Key 为最后一个子串
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
 
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
@@ -243,7 +244,7 @@ public class Configuration {
   protected final Set<String> loadedResources = new HashSet<>();
 
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
-
+  // 标记 缓存引用解析失败的 对象,在解析完成后,会再次解析, 解析失败情况:有各种异常,或者引用缓存还不曾加载到
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
 
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
@@ -254,6 +255,10 @@ public class Configuration {
    * A map holds cache-ref relationship. The key is the namespace that
    * references a cache bound to another namespace and the value is the
    * namespace which the actual cache is bound to.
+   */
+
+  /**
+   * 缓存引用, cache-ref: (actual cache)namespace
    */
   protected final Map<String, String> cacheRefMap = new HashMap<>();
 

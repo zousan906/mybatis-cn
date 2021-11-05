@@ -105,6 +105,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return currentNamespace + "." + base;
   }
 
+  /**
+   * 从 cache 集合中获取到引用的cache 设置到当前的mapper 中
+   * @param namespace
+   * @return
+   */
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
@@ -123,6 +128,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
   }
 
+  /**
+   * 构造一个新的cache.并且注册到 配置中心,namespace 就是cache 对象的ID
+   * <br>
+   *  Cache 这里用的 装饰者模式: 一个基础的cache 对象,通过 回收装饰者 来达到拥有 过期策略
+   */
   public Cache useNewCache(Class<? extends Cache> typeClass,
       Class<? extends Cache> evictionClass,
       Long flushInterval,
@@ -184,6 +194,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .build();
   }
 
+  /**
+   * 构造一个ResultMap 并且注册到 注册中心
+   */
   public ResultMap addResultMap(
       String id,
       Class<?> type,

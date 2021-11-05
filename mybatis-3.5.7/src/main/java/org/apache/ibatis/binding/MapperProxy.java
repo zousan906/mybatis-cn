@@ -94,7 +94,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
       return MapUtil.computeIfAbsent(methodCache, method, m -> {
-        //如果此方法是默认方法，则返回true ； 否则返回false 。 默认方法是公共非抽象实例方法，即具有主体的非静态方法，在接口类型中声明
+        //如果此方法是默认方法,在接口类型中声明,接口申明的default 方法
         if (m.isDefault()) {
           try {
             if (privateLookupInMethod == null) {

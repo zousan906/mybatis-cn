@@ -150,7 +150,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
       // 给当前解析助手设置 namespace
       builderAssistant.setCurrentNamespace(namespace);
-      // 解析 cache 配置信息
+      // 解析 二级缓存 cache 配置信息
       cacheRefElement(context.evalNode("cache-ref"));
       cacheElement(context.evalNode("cache"));
       // 解析所有的 参数映射集
@@ -234,19 +234,44 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 定义二级缓存引用, 如果是引用,则两个对象引用的缓存是同一个对象<br/>
+   * cache-ref : namespace <br/>
+   * 缓存引用,应用其他 namespace 的缓存配置 <br/>
+   * @param context
+   */
   private void cacheRefElement(XNode context) {
     if (context != null) {
+      // 标记 缓存引用
       configuration.addCacheRef(builderAssistant.getCurrentNamespace(), context.getStringAttribute("namespace"));
       CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute("namespace"));
+      // 从缓存集合中获取引用实例 设置到具体的mapper 中
       try {
         cacheRefResolver.resolveCacheRef();
       }
       catch (IncompleteElementException e) {
+        // 如果因为找不到缓存引用对象,则放入未完成列表,秋后算账
         configuration.addIncompleteCacheRef(cacheRefResolver);
       }
     }
   }
 
+  /**
+   * <b>定义二级缓存 配置 <b/><br/>
+   * 解析缓存配置<p>
+   * 属性列表:
+   * <ul>
+   *  <li>type: 缓存类型:默认缓存类型 perpetual {@link org.apache.ibatis.cache.impl.PerpetualCache}</li>
+   *  <li>eviction: 缓存的定时回收策略:常见的 FIFO,LRU</li>
+   *  <li>flushInterval: 配置一定时间自动刷新缓存</li>
+   *  <li>size: hashMap 缓存的数量</li>
+   *  <li>readOnly: 是否只读，若配置可读写，则需要对应的实体类能够序列化</li>
+   *  <li>blocking: 若缓存中找不到对应的key，是否会一直blocking，直到有对应的数据进入缓存</li>
+   * </ul>
+   * 元素:
+   * property
+   * @param context
+   */
   private void cacheElement(XNode context) {
     if (context != null) {
       String type = context.getStringAttribute("type", "PERPETUAL");
@@ -336,20 +361,21 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   /**
    * 解析 结果集映射
-   * <resultMap   id,type,extends,autoMapping>
-   *   <constructor>    配置构造参数,如果没有无参构造,且定义了带参构造方法,则需要定义构造函数
-   *     <idArg/>
-   *     <arg/>
-   *   </constructor>
-   *   <id/>        主键
-   *   <result/>    属性映射集合
-   *   <association property=""/>  级联 解决1对1 关系
-   *   <collection property=""/>   级联 解决1对多 关系
-   *   <discriminator javaType=""> 级联 鉴别器
-   *    <case value = ""></case>
-   *   </discriminator>
-   * </resultMap>
-   *
+   * <ul>
+   * <li>&lt resultMap   id,type,extends,autoMapping &gt </li>
+   * <li>  &lt constructor &gt    配置构造参数,如果没有无参构造,且定义了带参构造方法,则需要定义构造函数 </li>
+   * <li>    &lt idArg/ &gt </li>
+   * <li>    &lt arg/ &gt </li>
+   * <li>  &lt /constructor &gt </li>
+   * <li>  &lt id/ &gt        主键 </li>
+   * <li>  &lt result/ &gt    属性映射集合 </li>
+   * <li>  &lt association property=""/ &gt  级联 解决1对1 关系 </li>
+   * <li>  &lt collection property=""/ &gt   级联 解决1对多 关系 </li>
+   * <li>  &lt discriminator javaType="" &gt 级联 鉴别器 </li>
+   * <li>   &lt case value = "" &gt &gt /case &gt </li>
+   * <li>  &lt /discriminator &gt </li>
+   * <li> &lt /resultMap &gt </li>
+   *</ul>
    * @NOTE: 级联两种实用方式:
    *  <br/>1. 配置 select 子查询的方式(不推荐 查询N+1 问题, 每个结果集查询都要单独去查询一次, 要么就要配合lazy load 使用)
    *  <br/>2. 通过sql 写好 连接,只通过级联配置属性映射
@@ -362,10 +388,10 @@ public class XMLMapperBuilder extends BaseBuilder {
       resultMapNode.getStringAttribute("ofType",
         resultMapNode.getStringAttribute("resultType",
           resultMapNode.getStringAttribute("javaType"))));
-    // 依旧会查找已经注册的 类型或者 加载对应的class 对象
+    // 加载ResultMap 映射的实例对象类  (会查找已经注册的 类型或者 加载对应的class 对象)
     Class<?> typeClass = resolveClass(type);
     if (typeClass == null) {
-      // 找不到对应的type..class 对象,则检查 继承
+      // 检查内嵌 RM 配置: association  或者 case 的情况
       typeClass = inheritEnclosingType(resultMapNode, enclosingType);
     }
     Discriminator discriminator = null;
