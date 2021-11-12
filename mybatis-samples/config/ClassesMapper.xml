@@ -8,13 +8,13 @@
 <!--	<cache-ref namespace=""/>-->
 
 	<!--	配置参数映射-->
-	<parameterMap id="classIdName" type="freedom.san.mybatis.usage.basic.domain.Classes">
+	<parameterMap id="classIdName" type="freedom.san.mybatis.usage.basic.entity.Classes">
 		<parameter property="id" javaType="int"/>
 		<parameter property="name" javaType="String"/>
 	</parameterMap>
 
 
-	<resultMap id="BaseResultMap" type="freedom.san.mybatis.usage.basic.domain.Classes">
+	<resultMap id="BaseResultMap" type="freedom.san.mybatis.usage.basic.entity.Classes">
 		<!--		<constructor>-->
 		<!--			<idArg name="id" column="id" javaType="int"/>-->
 		<!--			<arg name="name" column="name" javaType="string"/>-->
@@ -23,21 +23,21 @@
 		<result property="name" column="name" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<resultMap id="IdNameRMap" type="freedom.san.mybatis.usage.basic.domain.Classes">
+	<resultMap id="IdNameRMap" type="freedom.san.mybatis.usage.basic.entity.Classes">
 		<id property="id" column="id" jdbcType="INTEGER"/>
 		<result property="name" column="name" jdbcType="VARCHAR"/>
 	</resultMap>
 
-	<select id="selectAll" resultType="freedom.san.mybatis.usage.basic.domain.Classes">
+	<select id="selectAll" resultType="freedom.san.mybatis.usage.basic.entity.Classes">
 		select *
 		from classes
 	</select>
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
-			parameterType="freedom.san.mybatis.usage.basic.domain.Classes">
+			parameterType="freedom.san.mybatis.usage.basic.entity.Classes">
 		insert INTO classes(name)
 		VALUES (#{name});
 	</insert>
-	<update id="update" parameterType="freedom.san.mybatis.usage.basic.domain.Classes">
+	<update id="update" parameterType="freedom.san.mybatis.usage.basic.entity.Classes">
 		UPDATE classes
 		set name=#{name}
 		where id = #{id};

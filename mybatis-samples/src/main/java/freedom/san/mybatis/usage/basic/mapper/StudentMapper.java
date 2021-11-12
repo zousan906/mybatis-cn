@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.type.Alias;
 
 /**
  * @Entity freedom.san.mybatis.domain.Student
@@ -36,11 +37,13 @@ public interface StudentMapper {
 	@Select({"select *  ", "from student ", "where id=#{id}"})
 	public Student selectAllById(@Param("id") Integer id);
 
+	@Select("Select * from student where cid=#{cid}")
+	@ResultMap("studentRM")
+	public List<Student> selectAllByCid(@Param("cid")Integer cid);
 
 	@Select("Select * from student")
 	// resultMap 可以引用已经定义的RM, 包括XML和 @Results 中定义的RM
 	@ResultMap("studentRM")
-//	@Lang(value = StudentLangDriver.class)
 	public List<Student> selectAll();
 
 

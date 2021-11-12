@@ -3,7 +3,7 @@ package freedom.san.mybatis.usage.basic;
 import java.util.List;
 
 import freedom.san.mybatis.MybatisApplication;
-import freedom.san.mybatis.usage.basic.domain.Classes;
+import freedom.san.mybatis.usage.basic.entity.Classes;
 import freedom.san.mybatis.usage.basic.mapper.ClassesMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;

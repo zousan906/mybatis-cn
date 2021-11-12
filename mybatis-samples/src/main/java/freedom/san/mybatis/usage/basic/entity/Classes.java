@@ -1,11 +1,14 @@
-package freedom.san.mybatis.usage.basic.domain;
+package freedom.san.mybatis.usage.basic.entity;
 
 import java.io.Serializable;
+
+import org.apache.ibatis.type.Alias;
 
 /**
  * 
  * @TableName classes
  */
+@Alias("Classes")
 public class Classes implements Serializable {
     /**
      * 班级id

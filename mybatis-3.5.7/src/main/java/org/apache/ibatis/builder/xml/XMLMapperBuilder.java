@@ -383,7 +383,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings, Class<?> enclosingType) {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
-    //ofType ,resultType,javaType ?? DTD 文件中不存在,是否是已经被废弃
+    //ofType ,resultType,javaType  主要是 级联中配置的
     String type = resultMapNode.getStringAttribute("type",
       resultMapNode.getStringAttribute("ofType",
         resultMapNode.getStringAttribute("resultType",

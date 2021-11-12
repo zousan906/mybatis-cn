@@ -129,6 +129,14 @@ public class Configuration {
 
   protected boolean mapUnderscoreToCamelCase;
 
+  /**
+   * 是否开启全局延迟加载
+   */
+  protected boolean lazyLoadingEnabled = false;
+
+  /**
+   * 是否开启按需 加在属性 默认值为false
+   */
   protected boolean aggressiveLazyLoading;
 
   protected boolean multipleResultSetsEnabled = true;
@@ -181,7 +189,7 @@ public class Configuration {
 
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
-  protected boolean lazyLoadingEnabled = false;
+
 
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 

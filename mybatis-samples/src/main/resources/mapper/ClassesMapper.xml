@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="freedom.san.mybatis.mapper.ClassesMapper">
 
-	<resultMap id="BaseResultMap" type="freedom.san.mybatis.domain.Classes" >
+	<resultMap id="BaseResultMap" type="freedom.san.mybatis.domain.Classes">
 		<id property="id" column="id" jdbcType="INTEGER"/>
 		<result property="name" column="name" jdbcType="VARCHAR"/>
 	</resultMap>

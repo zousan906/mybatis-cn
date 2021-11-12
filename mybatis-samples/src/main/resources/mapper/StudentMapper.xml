@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="freedom.san.mybatis.mapper.StudentMapper">
 
-	<resultMap id="BaseResultMap" type="freedom.san.mybatis.domain.Student">
+	<resultMap id="BaseRM" type="Student">
 		<id property="id" column="id" jdbcType="INTEGER"/>
 		<result property="name" column="name" jdbcType="VARCHAR"/>
 		<result property="age" column="age" jdbcType="INTEGER"/>
@@ -13,21 +13,27 @@
 		<result property="cardid" column="cardId" jdbcType="INTEGER"/>
 	</resultMap>
 
-	<sql id="columns">
-		id,name,age
-	</sql>
+	<sql id="all_column"> `id`,`name`,age,sex,cid,cardid</sql>
 	<!--useCache 表示使用缓存 -->
-	<select id="selectIf" parameterType="string" flushCache="false"
-			useCache="true" resultMap="BaseResultMap">
+	<select id="selectIf" parameterType="int" flushCache="false" useCache="true" resultMap="BaseRM">
 		select
-		<include refid="columns"/>
+		<include refid="all_column"/>
 		from student
 		<!--模拟if标签 -->
-		<if test="id !=null and id!=''">
+		<if test="id !=null">
 			where id=#{id}
 		</if>
 	</select>
 
+
+	<select id="selectForResultType" parameterType="int" resultType="Student">
+		select
+		<include refid="all_column"/>
+		from student
+		<if test="id !=null">
+			where id=#{id}
+		</if>
+	</select>
 
 	<select id="selectWhereIf" parameterType="string" flushCache="false"
 			useCache="true" resultMap="BaseResultMap">

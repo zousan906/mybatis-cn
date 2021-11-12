@@ -24,24 +24,18 @@
 
 	<properties resource="jdbc.properties"/>
 
+	<settings>
+<!--		<setting name="lazyLoadingEnabled" value="true"/>-->
+		<setting name="aggressiveLazyLoading" value="false"/>
+	</settings>
 
-	<!--	<settings>-->
-	<!--			<setting name="cacheEnabled" value="true"/>-->
-	<!--			<setting name="lazyLoadingEnabled" value="true"/>-->
-	<!--			<setting name="multipleResultSetsEnabled" value="true"/>-->
-	<!--			<setting name="useColumnLabel" value="true"/>-->
-	<!--			<setting name="useGeneratedKeys" value="false"/>-->
-	<!--			<setting name="autoMappingBehavior" value="PARTIAL"/>-->
-	<!--			<setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>-->
-	<!--			<setting name="defaultExecutorType" value="SIMPLE"/>-->
-	<!--			<setting name="defaultStatementTimeout" value="25"/>-->
-	<!--			<setting name="defaultFetchSize" value="100"/>-->
-	<!--			<setting name="safeRowBoundsEnabled" value="false"/>-->
-	<!--			<setting name="mapUnderscoreToCamelCase" value="false"/>-->
-	<!--			<setting name="localCacheScope" value="SESSION"/>-->
-	<!--			<setting name="jdbcTypeForNull" value="OTHER"/>-->
-	<!--			<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>-->
-	<!--	</settings>-->
+	<typeAliases>
+		<!--		typeAlias 要在package 前面  此处申明类 typeAliases 才会解析注解中的 @alias 不然不会生效-->
+		<!--		<typeAlias type="freedom.san.mybatis.usage.basic.entity.Student" alias="Student"/>-->
+		<package name="freedom.san.mybatis.usage.basic.entity"/>
+		<package name="freedom.san.mybatis.usage.basic.model"/>
+	</typeAliases>
+
 
 	<environments default="dev-pool">
 		<environment id="dev-unpool">
@@ -69,6 +63,7 @@
 		</environment>
 	</environments>
 
+
 	<mappers>
 		<!--resource 指定mapper xml 地址-->
 		<!--		<mapper resource="freedom/san/mybatis/usage/basic/xml/ClassesMapper.xml"/>-->
@@ -79,4 +74,5 @@
 		<!--		引入一个包下面的全部xml文件,且XML文件名和接口名称必须相同,路径也需要相同-->
 		<package name="freedom.san.mybatis.usage.basic.mapper"/>
 	</mappers>
+
 </configuration>
