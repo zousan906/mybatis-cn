@@ -14,10 +14,11 @@ import org.apache.ibatis.type.Alias;
 public class ClassStudentDO extends Classes {
 	private List<Student> students;
 
+	private String[] names;
+
 	@Override
 	public String toString() {
 		return "ClassStudentDO{}" + super.toString() + " student size:" + students.size();
 	}
-
 
 }

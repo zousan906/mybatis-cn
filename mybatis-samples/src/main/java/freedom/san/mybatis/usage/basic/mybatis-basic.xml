@@ -25,17 +25,23 @@
 	<properties resource="jdbc.properties"/>
 
 	<settings>
-<!--		<setting name="lazyLoadingEnabled" value="true"/>-->
+		<!--		<setting name="lazyLoadingEnabled" value="true"/>-->
 		<setting name="aggressiveLazyLoading" value="false"/>
 	</settings>
 
 	<typeAliases>
 		<!--		typeAlias 要在package 前面  此处申明类 typeAliases 才会解析注解中的 @alias 不然不会生效-->
 		<!--		<typeAlias type="freedom.san.mybatis.usage.basic.entity.Student" alias="Student"/>-->
+		<!--		package 解析方式:  默认 类名称,如果有alias 注解则使用注解-->
 		<package name="freedom.san.mybatis.usage.basic.entity"/>
 		<package name="freedom.san.mybatis.usage.basic.model"/>
 	</typeAliases>
-
+	<typeHandlers>
+		<!--		javaType, JdbcType, handler-->
+		<!--		<typeHandler handler="freedom.san.mybatis.usage.basic.type.StringArrayTypeHandler"/>-->
+		<!--		package  这里只能指定包路径,那么 javaType,jdbcType 就只能通过 在class 中通过 注解 @MappedTypes @MappedJdbcTypes 指定-->
+		<package name="freedom.san.mybatis.usage.basic.type"/>
+	</typeHandlers>
 
 	<environments default="dev-pool">
 		<environment id="dev-unpool">
