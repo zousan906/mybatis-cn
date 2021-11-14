@@ -405,10 +405,13 @@ public final class TypeHandlerRegistry {
   //
 
   // Only handler type
-
+  // 注册 type handler 会解析一下 有没有 javaType 的注解标记
+  // 如果 有javaType 的注解,则注解的每一个javaType 都需要 进行注册一个 handler 对象
+  // 如果没有javaType 标记,则注册一个 ?? TODO
   public void register(Class<?> typeHandlerClass) {
     boolean mappedTypeFound = false;
     MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.class);
+    // 如果 注解上配置了多个java type 则这里按照每个 java type 都进行一次 TypeHandler 注册
     if (mappedTypes != null) {
       for (Class<?> javaTypeClass : mappedTypes.value()) {
         register(javaTypeClass, typeHandlerClass);
@@ -460,6 +463,11 @@ public final class TypeHandlerRegistry {
 
   // scan
 
+  /**
+   * TypeHandler 包扫描
+   * 扫到所有的包: 忽略 内部类,接口 抽象类
+   * @param packageName
+   */
   public void register(String packageName) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);

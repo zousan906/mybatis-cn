@@ -342,6 +342,16 @@ public class XMLConfigBuilder extends BaseBuilder {
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
 
+  /**
+   * 开始解析 typeHandler 配置  type handler配置两种方式
+   * <pre>
+   *   1. 通过在xml config中配置 typeHandler :  handler=""  javaType : "" jdbcType:""
+   *   2. 通过在xml config中配置 package name="package name" 如果有多个包,则配置可以配置多个package.
+   *   java Type   和 jdbc type 可以在class 中使用 注解配置. MappedTypes 对应 javaTypes(可以配置多个) MappedJdbcTypes jdbc type(可以配置多个)
+   * </pre>
+   * 解析后的 type handler 注册到 TypeHandlerRegistry 注册中心,在进行 PS 设置和 读取ResultSet 时都会根据对应的类型查账对应的 类型处理器进行数据的设置或者读取类型转换
+   * @param parent
+   */
   private void typeHandlerElement(XNode parent) {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
