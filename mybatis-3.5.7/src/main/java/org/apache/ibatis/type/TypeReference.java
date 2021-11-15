@@ -34,6 +34,7 @@ public abstract class TypeReference<T> {
   }
 
   Type getSuperclassTypeParameter(Class<?> clazz) {
+    // 获取带有泛型的父类
     Type genericSuperclass = clazz.getGenericSuperclass();
     if (genericSuperclass instanceof Class) {
       // try to climb up the hierarchy until meet something useful

@@ -360,6 +360,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           typeHandlerRegistry.register(typeHandlerPackage);
         }
         else {
+          // 如果没有配置 javaType 则 配置jdbc Type　无效
           String javaTypeName = child.getStringAttribute("javaType");
           String jdbcTypeName = child.getStringAttribute("jdbcType");
           String handlerTypeName = child.getStringAttribute("handler");

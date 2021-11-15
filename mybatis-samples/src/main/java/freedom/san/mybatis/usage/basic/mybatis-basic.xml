@@ -37,8 +37,8 @@
 		<package name="freedom.san.mybatis.usage.basic.model"/>
 	</typeAliases>
 	<typeHandlers>
-		<!--		javaType, JdbcType, handler-->
-		<!--		<typeHandler handler="freedom.san.mybatis.usage.basic.type.StringArrayTypeHandler"/>-->
+		<!--		javaType, JdbcType, handler , 如果没有配置 javaType 则配置jdbcType 无效, 解析程序只会尝试解析 注解上的配置-->
+		<!--				<typeHandler handler="freedom.san.mybatis.usage.basic.type.StringArrayTypeHandler" jdbcType="VARCHAR"/>-->
 		<!--		package  这里只能指定包路径,那么 javaType,jdbcType 就只能通过 在class 中通过 注解 @MappedTypes @MappedJdbcTypes 指定-->
 		<package name="freedom.san.mybatis.usage.basic.type"/>
 	</typeHandlers>

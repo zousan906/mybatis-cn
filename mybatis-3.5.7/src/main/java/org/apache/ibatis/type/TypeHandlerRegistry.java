@@ -54,9 +54,12 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class TypeHandlerRegistry {
 
-  private final Map<JdbcType, TypeHandler<?>>  jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+  private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
+
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+
   private final TypeHandler<Object> unknownTypeHandler;
+
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
@@ -264,7 +267,8 @@ public final class TypeHandlerRegistry {
           register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
           return typeHandlerMap.get(enumClass);
         }
-      } else {
+      }
+      else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
     }
@@ -292,14 +296,15 @@ public final class TypeHandlerRegistry {
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForSuperclass(Class<?> clazz) {
-    Class<?> superclass =  clazz.getSuperclass();
+    Class<?> superclass = clazz.getSuperclass();
     if (superclass == null || Object.class.equals(superclass)) {
       return null;
     }
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
     if (jdbcHandlerMap != null) {
       return jdbcHandlerMap;
-    } else {
+    }
+    else {
       return getJdbcHandlerMapForSuperclass(superclass);
     }
   }
@@ -309,7 +314,8 @@ public final class TypeHandlerRegistry {
     for (TypeHandler<?> handler : jdbcHandlerMap.values()) {
       if (soleHandler == null) {
         soleHandler = handler;
-      } else if (!handler.getClass().equals(soleHandler.getClass())) {
+      }
+      else if (!handler.getClass().equals(soleHandler.getClass())) {
         // More than one type handlers registered.
         return null;
       }
@@ -331,6 +337,18 @@ public final class TypeHandlerRegistry {
 
   // Only handler
 
+  /**
+   * 注册只有handler 实例的情况:
+   * <pre>
+   *   1. 扫描 class 中是否配置 javaType 注解 (MappedTypes)
+   *   1.1 如果配置了 则遍历注解值,每个 javaType 都需要进行 handler 实例的映射
+   *   2. 如果没有MappedType 的注解,则判断自3.1.0 开始的 TypeReference 自动发现泛型JavaType
+   *   2.1 如果自动发现javaType 则进行javaType的注册
+   *   3. 如果都没有,则 进行Null 类型的注册
+   * </pre>
+   * @param typeHandler
+   * @param <T>
+   */
   @SuppressWarnings("unchecked")
   public <T> void register(TypeHandler<T> typeHandler) {
     boolean mappedTypeFound = false;
@@ -342,15 +360,18 @@ public final class TypeHandlerRegistry {
       }
     }
     // @since 3.1.0 - try to auto-discover the mapped type
+    // 从3.1.10 开始, BaseTypeHandler 继承了 TypeReference 则这里尝试自己推断泛型 java 类型
     if (!mappedTypeFound && typeHandler instanceof TypeReference) {
       try {
         TypeReference<T> typeReference = (TypeReference<T>) typeHandler;
         register(typeReference.getRawType(), typeHandler);
         mappedTypeFound = true;
-      } catch (Throwable t) {
+      }
+      catch (Throwable t) {
         // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
       }
     }
+    // 如果都没有找到 java 类型则默认注册 null 对象
     if (!mappedTypeFound) {
       register((Class<T>) null, typeHandler);
     }
@@ -362,16 +383,26 @@ public final class TypeHandlerRegistry {
     register((Type) javaType, typeHandler);
   }
 
+  /**
+   * 注册指定的 javaType -> handler
+   * <pre>
+   *   1. 这里会解析 handler 上的 jdbcType
+   *   2. 如果有多个jdbcType 则会针对每一个 jdbcType 都要注册一个java Type 与之对应Handler
+   * </pre>
+   */
   private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {
     MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);
     if (mappedJdbcTypes != null) {
       for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
         register(javaType, handledJdbcType, typeHandler);
       }
+      //如果 注解标记了 映射到null 类型,则需要注册 null 映射
       if (mappedJdbcTypes.includeNullJdbcType()) {
         register(javaType, null, typeHandler);
       }
-    } else {
+    }
+    else {
+      // 如果不包含 jdbcType 标记,则直接注册到nullType
       register(javaType, null, typeHandler);
     }
   }
@@ -388,6 +419,17 @@ public final class TypeHandlerRegistry {
     register((Type) type, jdbcType, handler);
   }
 
+  /**
+   * 将类型映射放入对应的 注册集合中
+   * @see this#typeHandlerMap  <code>typeHandlerMap</code>主要注册 javaType 关联的 jdbcType 和 对应 handler　实例
+   * <p>
+   * @see this#allTypeHandlersMap <code>allTypeHandlersMap</code> 主要注册 所有 TypeHandler 的实例对象
+   *
+   * <pre>
+   *   {@link this#typeHandlerMap}   (kv):  k:  javaType  v: (kv) jdbcType - handler 实例
+   *   {@link this#allTypeHandlersMap}   (kv): k: handler.class v: handler 实例
+   * </pre>
+   */
   private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
     if (javaType != null) {
       Map<JdbcType, TypeHandler<?>> map = typeHandlerMap.get(javaType);
@@ -407,7 +449,8 @@ public final class TypeHandlerRegistry {
   // Only handler type
   // 注册 type handler 会解析一下 有没有 javaType 的注解标记
   // 如果 有javaType 的注解,则注解的每一个javaType 都需要 进行注册一个 handler 对象
-  // 如果没有javaType 标记,则注册一个 ?? TODO
+  // 如果没有javaType 标记,则 实例化 typeHandler 使用null java type, 其实这里就是生产一个 handler 实例对象 然后
+  //再通过实例对象去 检测 注解 和 泛型对象自动发现,如果实在没有,则 就注册 null javaType 和handler 到 注册表中
   public void register(Class<?> typeHandlerClass) {
     boolean mappedTypeFound = false;
     MappedTypes mappedTypes = typeHandlerClass.getAnnotation(MappedTypes.class);
@@ -447,16 +490,19 @@ public final class TypeHandlerRegistry {
       try {
         Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
         return (TypeHandler<T>) c.newInstance(javaTypeClass);
-      } catch (NoSuchMethodException ignored) {
+      }
+      catch (NoSuchMethodException ignored) {
         // ignored
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         throw new TypeException("Failed invoking constructor for handler " + typeHandlerClass, e);
       }
     }
     try {
       Constructor<?> c = typeHandlerClass.getConstructor();
       return (TypeHandler<T>) c.newInstance();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, e);
     }
   }

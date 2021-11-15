@@ -6,6 +6,8 @@ import java.util.Random;
 
 import freedom.san.mybatis.MybatisApplication;
 import freedom.san.mybatis.domain.Student;
+import freedom.san.mybatis.usage.basic.entity.Card;
+import freedom.san.mybatis.usage.basic.mapper.CardMapper;
 import freedom.san.mybatis.usage.basic.mapper.StudentMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
@@ -22,6 +24,9 @@ public class AnnotationUsages extends MybatisApplication {
 	static final Logger log = LoggerFactory.getLogger(AnnotationUsages.class);
 
 	StudentMapper mapper;
+
+	CardMapper cardDao;
+
 	SqlSession sqlSession;
 
 	@BeforeClass
@@ -33,6 +38,7 @@ public class AnnotationUsages extends MybatisApplication {
 	public void before() {
 		sqlSession = getSessionFactory().openSession();
 		mapper = sqlSession.getMapper(StudentMapper.class);
+		cardDao = sqlSession.getMapper(CardMapper.class);
 		log.info("before");
 	}
 
@@ -48,6 +54,9 @@ public class AnnotationUsages extends MybatisApplication {
 	public void insertStudent() throws UnsupportedEncodingException {
 		Student student = genStudent();
 		mapper.insert(student);
+
+
+
 		log.info("insert student:{}", student);
 	}
 
@@ -74,6 +83,12 @@ public class AnnotationUsages extends MybatisApplication {
 		Student student = genStudent();
 		mapper.insertGetKey(student);
 		log.info("student:{}", student);
+
+		Card card = new Card();
+		card.setNumber(student.getCardid());
+		card.setStudentId(student.getId());
+		card.setBrief(new String[] {student.getName(), String.valueOf(student.getAge()), String.valueOf(student.getSex())});
+		cardDao.insert(card);
 	}
 
 	@Test
@@ -106,7 +121,7 @@ public class AnnotationUsages extends MybatisApplication {
 		student.setSex(new Random().nextInt(1) + 1);
 		student.setName(getChinese() + getChinese());
 		student.setCid(new Random().nextInt(5) + 1);
-		String id = student.getCid() +String.valueOf(new Random().nextInt(10)+10000)  + new Random().nextInt(10)+1;
+		String id = student.getCid() + String.valueOf(new Random().nextInt(10) + 10000) + new Random().nextInt(10) + 1;
 		student.setCardid(Integer.valueOf(id));
 		return student;
 	}

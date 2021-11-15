@@ -1,6 +1,7 @@
 package freedom.san.mybatis.usage.basic.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import org.apache.ibatis.type.Alias;
 
@@ -23,7 +24,13 @@ public class Card implements Serializable {
 	/**
 	 * 学生id
 	 */
-	private Integer studentid;
+	private Integer studentId;
+
+	/**
+	 * 简要信息
+	 */
+	private String [] brief;
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,14 +65,33 @@ public class Card implements Serializable {
 	/**
 	 * 学生id
 	 */
-	public Integer getStudentid() {
-		return studentid;
+	public Integer getStudentId() {
+		return studentId;
 	}
 
 	/**
 	 * 学生id
 	 */
-	public void setStudentid(Integer studentid) {
-		this.studentid = studentid;
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
+	}
+
+	public String[] getBrief() {
+		return brief;
+	}
+
+	public void setBrief(String[] brief) {
+		this.brief = brief;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Card{" +
+				"id=" + id +
+				", number=" + number +
+				", studentId=" + studentId +
+				", brief=" + Arrays.toString(brief) +
+				'}';
 	}
 }
