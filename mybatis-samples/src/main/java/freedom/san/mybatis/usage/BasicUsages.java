@@ -1,10 +1,10 @@
-package freedom.san.mybatis.usage.basic;
+package freedom.san.mybatis.usage;
 
 import java.util.List;
 
 import freedom.san.mybatis.MybatisApplication;
-import freedom.san.mybatis.usage.basic.entity.Classes;
-import freedom.san.mybatis.usage.basic.mapper.ClassesMapper;
+import freedom.san.mybatis.usage.entity.Classes;
+import freedom.san.mybatis.usage.mapper.ClassesMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class BasicUsages extends MybatisApplication {
 
 	@BeforeClass
 	public static void init() {
-		buildSqlSessionFactory("freedom/san/mybatis/usage/basic/mybatis-basic.xml");
+		buildSqlSessionFactory("freedom/san/mybatis/usage/mybatis-basic.xml");
 	}
 
 	@Before

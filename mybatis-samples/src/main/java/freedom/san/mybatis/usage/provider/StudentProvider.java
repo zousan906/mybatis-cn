@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic.provider;
+package freedom.san.mybatis.usage.provider;
 
 import org.apache.ibatis.jdbc.SQL;
 

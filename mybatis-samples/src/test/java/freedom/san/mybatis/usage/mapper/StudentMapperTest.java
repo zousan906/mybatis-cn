@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic.mapper;
+package freedom.san.mybatis.usage.mapper;
 
 import org.junit.jupiter.api.Test;
 

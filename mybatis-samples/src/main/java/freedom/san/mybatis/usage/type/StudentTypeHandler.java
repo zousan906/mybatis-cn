@@ -1,11 +1,11 @@
-package freedom.san.mybatis.usage.basic.type;
+package freedom.san.mybatis.usage.type;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import freedom.san.mybatis.usage.basic.entity.Student;
+import freedom.san.mybatis.usage.entity.Student;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

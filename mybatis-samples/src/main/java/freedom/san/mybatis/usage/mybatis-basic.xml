@@ -31,17 +31,28 @@
 
 	<typeAliases>
 		<!--		typeAlias 要在package 前面  此处申明类 typeAliases 才会解析注解中的 @alias 不然不会生效-->
-		<!--		<typeAlias type="freedom.san.mybatis.usage.basic.entity.Student" alias="Student"/>-->
+		<!--		<typeAlias type="freedom.san.mybatis.usage.entity.Student" alias="Student"/>-->
 		<!--		package 解析方式:  默认 类名称,如果有alias 注解则使用注解-->
-		<package name="freedom.san.mybatis.usage.basic.entity"/>
-		<package name="freedom.san.mybatis.usage.basic.model"/>
+		<package name="freedom.san.mybatis.usage.entity"/>
+		<package name="freedom.san.mybatis.usage.model"/>
 	</typeAliases>
 	<typeHandlers>
 		<!--		javaType, JdbcType, handler , 如果没有配置 javaType 则配置jdbcType 无效, 解析程序只会尝试解析 注解上的配置-->
-		<!--				<typeHandler handler="freedom.san.mybatis.usage.basic.type.StringArrayTypeHandler" jdbcType="VARCHAR"/>-->
+		<!--				<typeHandler handler="freedom.san.mybatis.usage.type.StringArrayTypeHandler" jdbcType="VARCHAR"/>-->
 		<!--		package  这里只能指定包路径,那么 javaType,jdbcType 就只能通过 在class 中通过 注解 @MappedTypes @MappedJdbcTypes 指定-->
-		<package name="freedom.san.mybatis.usage.basic.type"/>
+		<package name="freedom.san.mybatis.usage.type"/>
 	</typeHandlers>
+
+	<!--	一般用处不大,用来hook 实例对象的生成-->
+	<objectFactory type="freedom.san.mybatis.usage.factory.UserObjectFactory">
+		<property name="k1" value="v1"/>
+	</objectFactory>
+
+
+	<objectWrapperFactory type="freedom.san.mybatis.usage.factory.UserObjectWrapFactory"/>
+
+	<!--	 使用自定义 反射工厂 , 反射工厂主要用来 管理 mybatis 整个框架的 反射元数据获取和封装. 结合 objectFactory 和 objectWrapperFactory 对 mybatis 的 参数和结果集 进行解析和生成-->
+	<reflectorFactory type="freedom.san.mybatis.usage.factory.UserReflectorFactory"/>
 
 	<environments default="dev-pool">
 		<environment id="dev-unpool">
@@ -72,13 +83,13 @@
 
 	<mappers>
 		<!--resource 指定mapper xml 地址-->
-		<!--		<mapper resource="freedom/san/mybatis/usage/basic/xml/ClassesMapper.xml"/>-->
+		<!--		<mapper resource="freedom/san/mybatis/usage/xml/ClassesMapper.xml"/>-->
 		<!--引用的xml文件必须对应接口名称名一致,相同路径-->
 		<!--		<mapper class=""/>-->
 		<!--引用网络资源或者本地资源的全路径-->
 		<!--		<mapper url=""/>-->
 		<!--		引入一个包下面的全部xml文件,且XML文件名和接口名称必须相同,路径也需要相同-->
-		<package name="freedom.san.mybatis.usage.basic.mapper"/>
+		<package name="freedom.san.mybatis.usage.mapper"/>
 	</mappers>
 
 </configuration>

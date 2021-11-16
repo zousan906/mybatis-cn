@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="freedom.san.mybatis.usage.basic.mapper.ClassesMapper">
+<mapper namespace="freedom.san.mybatis.usage.mapper.ClassesMapper">
 
 	<resultMap id="BaseResultMap" type="Classes">
 		<id property="id" column="id" jdbcType="INTEGER"/>
@@ -15,14 +15,14 @@
 		<collection property="students" column="id" javaType="ArrayList"
 					ofType="Student"
 					fetchType="lazy"
-					select="freedom.san.mybatis.usage.basic.mapper.StudentMapper.selectAllByCid"/>
+					select="freedom.san.mybatis.usage.mapper.StudentMapper.selectAllByCid"/>
 	</resultMap>
 
 	<!-- 此用法(select)会产生N+1 的情况,一次Class 查询,N次student 参数 -->
 	<resultMap id="StudentsRM_N+1" type="ClassStudent" extends="BaseResultMap">
 		<collection property="students" column="id" javaType="ArrayList"
 					ofType="Student"
-					select="freedom.san.mybatis.usage.basic.mapper.StudentMapper.selectAllByCid"/>
+					select="freedom.san.mybatis.usage.mapper.StudentMapper.selectAllByCid"/>
 	</resultMap>
 
 
@@ -31,7 +31,7 @@
 		<collection property="students" column="id" javaType="ArrayList"
 					ofType="Student"
 					columnPrefix="s_"
-					resultMap="freedom.san.mybatis.usage.basic.mapper.StudentMapper.studentRM"/>
+					resultMap="freedom.san.mybatis.usage.mapper.StudentMapper.studentRM"/>
 	</resultMap>
 
 
@@ -67,16 +67,16 @@
 			c.id = s.cid
 	</select>
 
-	<select id="selectAll" resultType="freedom.san.mybatis.usage.basic.entity.Classes">
+	<select id="selectAll" resultType="freedom.san.mybatis.usage.entity.Classes">
 		select *
 		from classes
 	</select>
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
-			parameterType="freedom.san.mybatis.usage.basic.entity.Classes">
+			parameterType="freedom.san.mybatis.usage.entity.Classes">
 		insert INTO classes(name)
 		VALUES (#{name});
 	</insert>
-	<update id="update" parameterType="freedom.san.mybatis.usage.basic.entity.Classes">
+	<update id="update" parameterType="freedom.san.mybatis.usage.entity.Classes">
 		UPDATE classes
 		set name=#{name}
 		where id = #{id};

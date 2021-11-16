@@ -1,13 +1,12 @@
-package freedom.san.mybatis.usage.basic.mapper;
+package freedom.san.mybatis.usage.mapper;
 
 import java.util.List;
 
 import freedom.san.mybatis.domain.Student;
-import freedom.san.mybatis.usage.basic.langdriver.StudentLangDriver;
-import freedom.san.mybatis.usage.basic.provider.StudentProvider;
+import freedom.san.mybatis.usage.provider.StudentProvider;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Lang;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -17,11 +16,11 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.type.Alias;
 
 /**
  * @Entity freedom.san.mybatis.domain.Student
  */
+@Mapper
 public interface StudentMapper {
 
 

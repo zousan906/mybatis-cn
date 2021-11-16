@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic.type;
+package freedom.san.mybatis.usage.type;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -11,8 +11,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
-//@MappedTypes(String [].class)
-//@MappedJdbcTypes(JdbcType.VARCHAR)
+@MappedTypes(String [].class)
+@MappedJdbcTypes(JdbcType.VARCHAR)
 public class StringArrayTypeHandler  extends BaseTypeHandler<String []> {
 	public void setNonNullParameter(PreparedStatement ps, int i, String[] parameter, JdbcType jdbcType) throws SQLException {
 		ps.setString(i, StringUtils.joinWith(",",parameter));

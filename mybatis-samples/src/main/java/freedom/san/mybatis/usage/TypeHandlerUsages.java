@@ -1,14 +1,9 @@
-package freedom.san.mybatis.usage.basic;
-
-import java.util.List;
+package freedom.san.mybatis.usage;
 
 import freedom.san.mybatis.MybatisApplication;
-import freedom.san.mybatis.usage.basic.entity.Card;
-import freedom.san.mybatis.usage.basic.entity.Student;
-import freedom.san.mybatis.usage.basic.mapper.CardMapper;
-import freedom.san.mybatis.usage.basic.mapper.ClassesMapper;
-import freedom.san.mybatis.usage.basic.model.CardStudentDO;
-import freedom.san.mybatis.usage.basic.model.ClassStudentDO;
+import freedom.san.mybatis.usage.entity.Card;
+import freedom.san.mybatis.usage.mapper.CardMapper;
+import freedom.san.mybatis.usage.model.CardStudentDO;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,7 +29,7 @@ public class TypeHandlerUsages extends MybatisApplication {
 	@BeforeClass
 	public static void init() {
 		log.info("before class");
-		buildSqlSessionFactory("freedom/san/mybatis/usage/basic/mybatis-basic.xml");
+		buildSqlSessionFactory("freedom/san/mybatis/usage/mybatis-basic.xml");
 		sqlSession = getSessionFactory().openSession();
 		mapper = sqlSession.getMapper(CardMapper.class);
 	}

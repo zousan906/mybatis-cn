@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic.langdriver;
+package freedom.san.mybatis.usage.langdriver;
 
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;

@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic;
+package freedom.san.mybatis.usage;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.Random;
 
 import freedom.san.mybatis.MybatisApplication;
 import freedom.san.mybatis.domain.Student;
-import freedom.san.mybatis.usage.basic.entity.Card;
-import freedom.san.mybatis.usage.basic.mapper.CardMapper;
-import freedom.san.mybatis.usage.basic.mapper.StudentMapper;
+import freedom.san.mybatis.usage.entity.Card;
+import freedom.san.mybatis.usage.mapper.CardMapper;
+import freedom.san.mybatis.usage.mapper.StudentMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +31,7 @@ public class AnnotationUsages extends MybatisApplication {
 
 	@BeforeClass
 	public static void init() {
-		buildSqlSessionFactory("freedom/san/mybatis/usage/basic/mybatis-basic.xml");
+		buildSqlSessionFactory("freedom/san/mybatis/usage/mybatis-basic.xml");
 	}
 
 	@Before

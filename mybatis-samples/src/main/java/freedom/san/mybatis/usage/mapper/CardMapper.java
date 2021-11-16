@@ -1,11 +1,11 @@
-package freedom.san.mybatis.usage.basic.mapper;
+package freedom.san.mybatis.usage.mapper;
 
-import freedom.san.mybatis.usage.basic.entity.Card;
-import freedom.san.mybatis.usage.basic.entity.Student;
-import freedom.san.mybatis.usage.basic.model.CardStudentDO;
+import freedom.san.mybatis.usage.entity.Card;
+import freedom.san.mybatis.usage.entity.Student;
+import freedom.san.mybatis.usage.model.CardStudentDO;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Select;
  * @Entity freedom.san.mybatis.domain.Card
  */
 
-
+@Mapper
 public interface CardMapper {
 
 	@Select("select * from card where id=#{id}")
@@ -22,7 +22,6 @@ public interface CardMapper {
 			@Result(property = "number", column = "number"),
 			@Result(property = "studentId", column = "studentId"),
 			@Result(property = "brief", column = "brief"),
-			@Result(property = "stu", column = "brief", javaType = Student.class),
 	})
 	public Card selectById(Integer id);
 

@@ -1,9 +1,9 @@
-package freedom.san.mybatis.usage.basic.model;
+package freedom.san.mybatis.usage.model;
 
 import java.util.List;
 
-import freedom.san.mybatis.usage.basic.entity.Classes;
-import freedom.san.mybatis.usage.basic.entity.Student;
+import freedom.san.mybatis.usage.entity.Classes;
+import freedom.san.mybatis.usage.entity.Student;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.type.Alias;

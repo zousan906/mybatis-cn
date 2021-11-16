@@ -1,11 +1,11 @@
-package freedom.san.mybatis.usage.basic;
+package freedom.san.mybatis.usage;
 
 import java.util.List;
 
 import freedom.san.mybatis.MybatisApplication;
-import freedom.san.mybatis.usage.basic.entity.Student;
-import freedom.san.mybatis.usage.basic.mapper.ClassesMapper;
-import freedom.san.mybatis.usage.basic.model.ClassStudentDO;
+import freedom.san.mybatis.usage.entity.Student;
+import freedom.san.mybatis.usage.mapper.ClassesMapper;
+import freedom.san.mybatis.usage.model.ClassStudentDO;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,7 +30,7 @@ public class CascadeUsages extends MybatisApplication {
 	@BeforeClass
 	public static void init() {
 		log.info("before class");
-		buildSqlSessionFactory("freedom/san/mybatis/usage/basic/mybatis-basic.xml");
+		buildSqlSessionFactory("freedom/san/mybatis/usage/mybatis-basic.xml");
 		sqlSession = getSessionFactory().openSession();
 		mapper = sqlSession.getMapper(ClassesMapper.class);
 	}

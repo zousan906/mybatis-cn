@@ -1,9 +1,9 @@
-package freedom.san.mybatis.usage.basic.mapper;
+package freedom.san.mybatis.usage.mapper;
 
 import java.util.List;
 
-import freedom.san.mybatis.usage.basic.entity.Classes;
-import freedom.san.mybatis.usage.basic.model.ClassStudentDO;
+import freedom.san.mybatis.usage.entity.Classes;
+import freedom.san.mybatis.usage.model.ClassStudentDO;
 
 /**
  * @Entity freedom.san.mybatis.domain.Classes

@@ -1,4 +1,4 @@
-package freedom.san.mybatis.usage.basic.entity;
+package freedom.san.mybatis.usage.entity;
 
 import java.io.Serializable;
 
