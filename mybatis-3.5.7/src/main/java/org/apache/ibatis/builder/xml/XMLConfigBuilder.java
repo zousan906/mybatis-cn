@@ -188,6 +188,17 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 解析plugins 配置实现
+   *
+   * 读取配置的class 属性, 通过默认构造方法 进行反射实例化对象
+   *
+   * 实例化对象 注册到 配置中心的  interceptorChain 中.  chain 只是一个 list 集合
+   *
+   *  在创建指定的实例时,通过 Jdk 动态代理 通过责任连模式 对代理对象进行 切面封装
+   * @param parent
+   * @throws Exception
+   */
   private void pluginElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
