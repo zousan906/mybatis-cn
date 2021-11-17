@@ -41,6 +41,18 @@ public class Plugin implements InvocationHandler {
     this.signatureMap = signatureMap;
   }
 
+  /**
+   * <pre>
+   * Plugin.wrap 方法 会解析 传入的 拦截器
+   * 1. 解析拦截器是否有 intercepts 注解,
+   * 2. 如果注解了 则解析注解标记的 拦截类 拦截方法以及拦截方法的参数
+   * 3. 解析被拦截目标的所有接口 是否有 注解标记的 拦截类
+   * 4. 如果包含被拦截的类 则创建Jdk 动态代理 对象返回
+   * </pre>
+   * @param target
+   * @param interceptor
+   * @return
+   */
   public static Object wrap(Object target, Interceptor interceptor) {
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();

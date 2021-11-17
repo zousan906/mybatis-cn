@@ -54,6 +54,12 @@
 	<!--	 使用自定义 反射工厂 , 反射工厂主要用来 管理 mybatis 整个框架的 反射元数据获取和封装. 结合 objectFactory 和 objectWrapperFactory 对 mybatis 的 参数和结果集 进行解析和生成-->
 	<reflectorFactory type="freedom.san.mybatis.usage.factory.UserReflectorFactory"/>
 
+	<plugins>
+<!--		https://www.cnblogs.com/chenpi/p/10498921.html-->
+		<plugin interceptor="freedom.san.mybatis.usage.plugin.SqlMonitorPlugin"></plugin>
+		<plugin interceptor="freedom.san.mybatis.usage.plugin.MonitorPlugin"></plugin>
+	</plugins>
+
 	<environments default="dev-pool">
 		<environment id="dev-unpool">
 			<transactionManager type="JDBC">
