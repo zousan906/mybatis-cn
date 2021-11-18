@@ -4,6 +4,7 @@ import java.util.List;
 
 import freedom.san.mybatis.usage.entity.Classes;
 import freedom.san.mybatis.usage.model.ClassStudentDO;
+import org.apache.ibatis.annotations.Options;
 
 /**
  * @Entity freedom.san.mybatis.domain.Classes
@@ -17,6 +18,7 @@ public interface ClassesMapper {
 	public List<ClassStudentDO> selectStudents(int id);
 	public List<ClassStudentDO> selectAllStudents();
 	public List<ClassStudentDO> selectAllStudentsLazy();
+
 	public List<ClassStudentDO> selectAllStudentsCascade();
 
 }

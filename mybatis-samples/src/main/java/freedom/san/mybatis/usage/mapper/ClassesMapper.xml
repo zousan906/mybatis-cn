@@ -35,6 +35,7 @@
 	</resultMap>
 
 
+
 	<select id="selectStudents" resultMap="StudentsRM_N+1" parameterType="int">
 		select *
 		from classes

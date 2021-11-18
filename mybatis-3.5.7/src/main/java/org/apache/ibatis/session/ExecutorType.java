@@ -17,6 +17,12 @@ package org.apache.ibatis.session;
 
 /**
  * @author Clinton Begin
+ *  提供三种 执行器
+ * <pre>
+ *  1. Simple  默认的 执行器: 每次执行query ,update 就开启一个新的statement ,用完后就立即关闭statement 对象
+ *  2. resuse  重用执行器 : 每次执行完 query ,update  statement 缓存在 executor 中,reuse 主要是复用 statement 对象
+ *  3. batch   批处理执行器: 只处理 update, jdbc 不处理批量查询, 批量update ,addBatch 都是缓存在executor中
+ * </pre>
  */
 public enum ExecutorType {
   SIMPLE, REUSE, BATCH

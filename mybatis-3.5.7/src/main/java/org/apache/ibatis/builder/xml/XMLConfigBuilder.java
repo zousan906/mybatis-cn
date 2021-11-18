@@ -106,10 +106,15 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 解析 properties 很简单: resource 和 URL 只能配置一个
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
+      // 解析typeAlias  两种配置方式:
+      // 1. package=   通过扫描包的方式,默认使用类名小写,如果 注解标记了名字则使用@alias 标记值
+      // 2: type= ,alias = ;  alias 如果没有申明,则类名小写 或者 解析注解
+      // xml 申明时 typeAlias 需要放到 package 之前 不然格式验证不通过
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
@@ -251,10 +256,12 @@ public class XMLConfigBuilder extends BaseBuilder {
       else if (url != null) {
         defaults.putAll(Resources.getUrlAsProperties(url));
       }
+      // 将当前加载的所有变量全都放到 配置中心取
       Properties vars = configuration.getVariables();
       if (vars != null) {
         defaults.putAll(vars);
       }
+      // 将全部变量放入 xpath 解析中,用于替换 变量参数
       parser.setVariables(defaults);
       configuration.setVariables(defaults);
     }
@@ -291,6 +298,31 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
   }
 
+  //	<environments default="dev-pool">
+  //		<environment id="dev-unpool">
+  //			<transactionManager type="JDBC">
+  //				<property name="" value=""/>
+  //			</transactionManager>
+  //			<dataSource type="UNPOOLED">
+  //				<property name="driver" value="${driver}"/>
+  //				<property name="url" value="${url}"/>
+  //				<property name="username" value="${username}"/>
+  //				<property name="password" value="${password}"/>
+  //			</dataSource>
+  //		</environment>
+  //
+  //		<environment id="dev-pool">
+  //			<transactionManager type="JDBC">
+  //				<property name="" value=""/>
+  //			</transactionManager>
+  //			<dataSource type="POOLED">
+  //				<property name="driver" value="${driver}"/>
+  //				<property name="url" value="${url}"/>
+  //				<property name="username" value="${username}"/>
+  //				<property name="password" value="${password}"/>
+  //			</dataSource>
+  //		</environment>
+  //	</environments>
   private void environmentsElement(XNode context) throws Exception {
     if (context != null) {
       if (environment == null) {
